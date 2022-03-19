@@ -4,19 +4,26 @@
     </div>
 
     <div class="block--container block--linktree">
-        <div class="block">
-          <h2>Atelier Krouiñ</h2>
-          <p>Atelier Krouiñ est le blog de Chloé Corfmat.</p>
-          <a href="https://blog.atelierkrouin.fr" class="btn--secondary btn--container tag tag--primary">Le blog Atelier Krouiñ</a>
-          <a href="/articles" class="btn--secondary btn--container tag tag--primary">La newsletter</a>
-        </div>
+      {{ $dataJ := getJSON "https://strapi.atelierkrouin.fr/linktree"}}
 
-        <div class="block">
-          <h2>J'ai parlé d'eux</h2>
-          <p>Retrouvez ci-dessous les liens vers mes ressources favorites.</p>
-          <a href="/articles" target="_blank" class="btn--secondary btn--container tag tag--primary">Artesane</a>
-          <a href="/articles" target="_blank" class="btn--secondary btn--container tag tag--primary">Blossom Quilt & Craft</a>
+      {{/* {{ printf "%#v" $dataJ}} */}}
 
+      {{ range $dataJ.linktree_category }}
+        <div class="block">
+          <h2>{{.category}}</h2>
+
+          {{ if .description }}
+            {{ .description | safeHTML }}
+          {{ end }}
+
+          {{ range .linktree_link }}
+            {{ if .external }}
+              <a href="{{ .url }}" title="{{ .text }} - Nouvelle fenêtre" target="_blank" rel="noreferrer noopener" class="btn--secondary btn--container tag tag--primary">{{ .text }}</a>
+            {{ else }}
+              <a href="{{ .url }}" class="btn--secondary btn--container tag tag--primary">{{ .text }}</a>
+            {{ end }}
+          {{ end }}
         </div>
+      {{ end }}
     </div>
 {{ end }}
